@@ -59,11 +59,29 @@
         "type": "github"
       }
     },
+    "rocknix": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786108047,
+        "narHash": "sha256-U9u33/cOENGbiJN2hDhBmAZ4PVno0QUaDRqRwpM0zrw=",
+        "owner": "ROCKNIX",
+        "repo": "distribution",
+        "rev": "8a3527be1f99346a4f51ce6481aea763e5b204b2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ROCKNIX",
+        "ref": "next",
+        "repo": "distribution",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
         "impermanence": "impermanence",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "rocknix": "rocknix"
       }
     }
   },

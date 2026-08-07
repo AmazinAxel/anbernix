@@ -29,5 +29,7 @@ Available modules:
   H700 module and the RG35XX-H device tree name.
 
 The kernel patch set is based on ROCKNIX's H700 support from
-`ROCKNIX/distribution/projects/ROCKNIX/devices/H700`, plus ROCKNIX mainline
-support patches used by the out-of-tree joypad driver.
+the locked `rocknix` flake input. Most patches are read directly from
+`ROCKNIX/distribution/projects/ROCKNIX/devices/H700`, plus selected ROCKNIX
+mainline support patches used by the out-of-tree joypad driver. Local kernel
+deltas are documented in `kernel/README.md`.

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 let
   retroarchCustom = pkgs.retroarch-bare.overrideAttrs (old: {
@@ -52,7 +52,7 @@ in {
     ./hardware-configuration.nix
     ./common.nix
     ./modules/tmpfs-root.nix
-    ./modules/anbernic/rg35xx-h
+    inputs.self.nixosModules.anbernic-rg35xx-h
 
     ./home-manager/inputHandlers.nix
     ./home-manager/menus.nix

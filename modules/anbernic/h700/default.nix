@@ -1,13 +1,16 @@
+{ inputs }:
 { pkgs, lib, ... }:
 
 let
+  rocknixFirmware = inputs.rocknix + "/projects/ROCKNIX/packages/linux-firmware/kernel-firmware/extra-firmware";
   anbernicPanelFirmware = pkgs.runCommand "anbernic-panel-firmware" {} ''
     mkdir -p $out/lib/firmware/panels
-    cp ${../../../kernel/panels}/*.panel $out/lib/firmware/panels/
+    cp ${rocknixFirmware}/panels/anbernic,rg35xx-plus-panel.panel $out/lib/firmware/panels/
+    cp ${rocknixFirmware}/panels/anbernic,rg35xx-plus-rev6-panel.panel $out/lib/firmware/panels/
   '';
 in {
   imports = [
-    ../../../kernel/kernel.nix
+    (import ../../../kernel/kernel.nix { inherit inputs; })
   ];
 
   boot = {
