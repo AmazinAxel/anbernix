@@ -6,10 +6,9 @@ A NixOS flake providing hardware support for Anbernic Linux handhelds
 
 - `modules/`: reusable NixOS hardware modules for downstream configs.
 - `pkgs/`: package derivations used by the modules, including the H700 kernel
-  and ROCKNIX joypad driver.
+  ROCKNIX joypad driver, U-Boot, and RetroArch wrapper.
 - `kernel/`: local kernel config and provenance notes.
-- `profiles/`: optional system/user profiles for this repository's own image.
-- `hosts/`: complete host configurations maintained in this repository.
+- `hosts/`: default image configurations exported by this flake.
 
 ## NixOS Modules
 
@@ -17,7 +16,7 @@ To use, import and apply the module for your device, like so:
 
 ```nix
 {
-  inputs.anbernix.url = "github:OWNER/anbernix";
+  inputs.anbernix.url = "github:AmazinAxel/anbernix";
 
   outputs = { nixpkgs, anbernix, ... }: {
     nixosConfigurations.my-handheld = nixpkgs.lib.nixosSystem {
@@ -38,6 +37,23 @@ Available modules:
   H700 module and the RG35XX-H device tree name.
 - `anbernix.nixosModules.anbernic-h700-sd-image`: optional SD image
   post-processing support that injects H700 U-Boot SPL into generated images.
+- `anbernix.nixosModules.anbernic-h700-retroarch`: optional RetroArch setup for
+  H700 devices, using the wrapped `retroarch-h700` package.
+
+## Packages
+
+- `anbernix.packages.aarch64-linux.linux-h700`: patched H700 kernel.
+- `anbernix.packages.aarch64-linux.rocknix-joypad`: ROCKNIX joypad kernel
+  module.
+- `anbernix.packages.aarch64-linux.u-boot-h700`: LPDDR4 H700 U-Boot by
+  default.
+- `anbernix.packages.aarch64-linux.u-boot-h700-lpddr3`: LPDDR3 H700 U-Boot.
+- `anbernix.packages.aarch64-linux.u-boot-h700-lpddr4`: LPDDR4 H700 U-Boot.
+- `anbernix.packages.aarch64-linux.retroarch-h700`: RetroArch built for
+  KMS/GLES with H700 input mappings.
+- `anbernix.packages.aarch64-linux.rg35xx-h-sd-image`: default RG35XX-H SD
+  image.
+- `anbernix.packages.aarch64-linux.default`: alias for `rg35xx-h-sd-image`.
 
 ## SD Card Images
 
@@ -70,6 +86,20 @@ U-Boot, which is expected for RG35XX-H units. Boards that need LPDDR3 can set:
 {
   hardware.anbernic.h700.sdImage.ddrType = "lpddr3";
 }
+```
+
+This flake also exports a default RG35XX-H image with RetroArch installed and
+autostarted as the `anbernix` user:
+
+```sh
+nix build github:AmazinAxel/anbernix
+```
+
+Equivalent explicit targets:
+
+```sh
+nix build github:AmazinAxel/anbernix#rg35xx-h-sd-image
+nix build github:AmazinAxel/anbernix#nixosConfigurations.rg35xx-h.config.system.build.anbernixSdImage
 ```
 
 ### Rumble Support

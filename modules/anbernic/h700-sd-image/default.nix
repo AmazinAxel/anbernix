@@ -46,7 +46,7 @@ in {
 
       zstd -dc ${config.system.build.sdImage}/sd-image/*.img.zst > image.img
       dd if=${uBootH700}/u-boot-sunxi-with-spl.bin of=image.img bs=1K seek=8 conv=notrunc
-      zstd -T0 -19 image.img -o $out/sd-image/${patchedImageName}
+      zstd -T0 image.img -o $out/sd-image/${patchedImageName}
     '';
   };
 }

@@ -1,24 +1,13 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    impermanence = {
-      url = "github:nix-community/impermanence";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-      };
-    };
     rocknix = {
       url = "github:ROCKNIX/distribution/next";
       flake = false;
     };
   };
 
-  outputs = { self, home-manager, nixpkgs, ... }@inputs: {
+  outputs = { self, nixpkgs, ... }@inputs: {
     packages.aarch64-linux =
       let
         pkgs = nixpkgs.legacyPackages.aarch64-linux;
@@ -40,15 +29,20 @@
           rocknix = inputs.rocknix;
           ddrType = "lpddr4";
         };
+        retroarch-h700 = pkgs.callPackage ./pkgs/retroarch-h700 { };
+        rg35xx-h-sd-image = self.nixosConfigurations.rg35xx-h.config.system.build.anbernixSdImage;
+        default = self.packages.aarch64-linux.rg35xx-h-sd-image;
       };
 
     nixosModules = {
       anbernic-h700 = import ./modules/anbernic/h700 { inherit inputs; };
       anbernic-h700-sd-image = import ./modules/anbernic/h700-sd-image { inherit inputs; };
+      anbernic-h700-retroarch = import ./modules/anbernic/h700-retroarch { inherit self; };
       anbernic-rg35xx-h = import ./modules/anbernic/rg35xx-h { inherit inputs; };
 
       h700 = self.nixosModules.anbernic-h700;
       h700-sd-image = self.nixosModules.anbernic-h700-sd-image;
+      h700-retroarch = self.nixosModules.anbernic-h700-retroarch;
       rg35xx-h = self.nixosModules.anbernic-rg35xx-h;
       default = self.nixosModules.anbernic-h700;
     };
@@ -61,6 +55,7 @@
             modules = modules ++ [
               {
                 boot.loader.grub.enable = false;
+                boot.zfs.forceImportRoot = false;
                 fileSystems."/" = {
                   device = "none";
                   fsType = "tmpfs";
@@ -89,18 +84,22 @@
               self.nixosModules.anbernic-h700-sd-image
               {
                 boot.loader.grub.enable = false;
+                boot.zfs.forceImportRoot = false;
                 system.stateVersion = "25.05";
               }
             ];
           }).config.system.build.anbernixSdImage;
+        anbernic-h700-retroarch-module = minimalSystem [
+          self.nixosModules.anbernic-rg35xx-h
+          self.nixosModules.anbernic-h700-retroarch
+          { hardware.anbernic.h700.retroarch.enable = true; }
+        ];
       };
 
-    nixosConfigurations."anbernix" = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs; };
-      modules = [
-        ./hosts/alechandheld/configuration.nix
-        home-manager.nixosModules.home-manager
-      ];
+    nixosConfigurations = {
+      rg35xx-h = import ./hosts/rg35xx-h {
+        inherit self nixpkgs;
+      };
     };
   };
 }
