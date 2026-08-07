@@ -16,5 +16,3 @@ Local files here are intentional deltas:
 - `local-patches/0001-gpiolib-of-revert-api-changes-needed-for-joypad-driver.patch`:
   local or older ROCKNIX patch not present in current ROCKNIX `next`.
 
-The force-feedback patch is still enabled for Anbernix, but its contents are
-read directly from ROCKNIX's `0150-add-forcefeedback.patch.disabled`.

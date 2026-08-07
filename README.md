@@ -28,6 +28,20 @@ Available modules:
 - `anbernix.nixosModules.anbernic-rg35xx-h`: RG35XX-H support, including the
   H700 module and the RG35XX-H device tree name.
 
+### Rumble Support
+
+Rumble is disabled by default. ROCKNIX currently ships its H700 force-feedback
+patch as `0150-add-forcefeedback.patch.disabled` because the current H700 PWM
+driver is not considered reliable enough upstream.
+
+You can opt in for testing:
+
+```nix
+{
+  hardware.anbernic.h700.enableRumble = true;
+}
+```
+
 The kernel patch set is based on ROCKNIX's H700 support from
 the locked `rocknix` flake input. Most patches are read directly from
 `ROCKNIX/distribution/projects/ROCKNIX/devices/H700`, plus selected ROCKNIX

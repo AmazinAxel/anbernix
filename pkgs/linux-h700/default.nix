@@ -1,6 +1,7 @@
 { pkgs
 , lib
 , rocknix
+, enableRumble ? false
 , ...
 }:
 
@@ -23,10 +24,9 @@ let
   ];
 
   h700PatchDir = rocknixH700 + "/patches/linux";
-  devicePatches = patchesFrom h700PatchDir ++ [
-    # ROCKNIX ships this disabled, but the current Anbernix host had it enabled.
-    (h700PatchDir + "/0150-add-forcefeedback.patch.disabled")
-  ];
+  devicePatches =
+    patchesFrom h700PatchDir
+    ++ lib.optional enableRumble (h700PatchDir + "/0150-add-forcefeedback.patch.disabled");
 
   armMissingOptions = [ "DMIID" ];
 
