@@ -7,7 +7,9 @@
 
 let
   rocknixH700 = rocknix + "/projects/ROCKNIX/devices/H700";
-  rocknixMainline = rocknix + "/projects/ROCKNIX/packages/linux/patches/mainline";
+  rocknixKernelPatches = rocknix + "/projects/ROCKNIX/packages/linux/patches";
+  rocknixKernelVersion = rocknixKernelPatches + "/7.0";
+  rocknixMainline = rocknixKernelPatches + "/mainline";
   rocknixFirmware = rocknix + "/projects/ROCKNIX/packages/linux-firmware/kernel-firmware/extra-firmware";
 
   patchNames = dir:
@@ -16,12 +18,7 @@ let
 
   patchesFrom = dir: map (p: dir + "/${p}") (patchNames dir);
 
-  mainlinePatches = [
-    ../../kernel/local-patches/0001-gpiolib-of-revert-api-changes-needed-for-joypad-driv.patch
-    (rocknixMainline + "/0002-input-add-input-polldev-driver.patch")
-    (rocknixMainline + "/0003-pwm-add-pwm_set_period.patch")
-    (rocknixMainline + "/0004-input-adc-keys-redirect-keycode-316-to-rocknix-joypa.patch")
-  ];
+  upstreamPatches = patchesFrom rocknixKernelVersion ++ patchesFrom rocknixMainline;
 
   h700PatchDir = rocknixH700 + "/patches/linux";
   devicePatches =
@@ -57,7 +54,7 @@ let
     kernelPatches = map (p: {
       name = builtins.baseNameOf p;
       patch = p;
-    }) (mainlinePatches ++ devicePatches);
+    }) (upstreamPatches ++ devicePatches);
     allowImportFromDerivation = true;
   };
 in
