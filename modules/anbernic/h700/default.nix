@@ -11,7 +11,7 @@ let
   '';
 in {
   imports = [
-    (import ../../../kernel/kernel.nix {
+    (import ./kernel.nix {
       inherit inputs;
       enableRumble = cfg.enableRumble;
     })

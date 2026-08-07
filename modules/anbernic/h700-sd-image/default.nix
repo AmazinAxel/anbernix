@@ -22,6 +22,23 @@ in {
   };
 
   config = {
+    assertions = [
+      {
+        assertion = lib.hasAttrByPath [ "system" "build" "sdImage" ] config;
+        message = ''
+          anbernic-h700-sd-image must be used with a NixOS SD image module,
+          such as nixpkgs/nixos/modules/installer/sd-card/sd-image-aarch64.nix.
+        '';
+      }
+      {
+        assertion = lib.attrByPath [ "sdImage" "compressImage" ] true config;
+        message = ''
+          anbernic-h700-sd-image expects a compressed .img.zst SD image. Set
+          sdImage.compressImage = true.
+        '';
+      }
+    ];
+
     system.build.anbernixSdImage = pkgs.runCommand "anbernix-h700-sd-image" {
       nativeBuildInputs = [ pkgs.zstd ];
     } ''

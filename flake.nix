@@ -80,6 +80,19 @@
           self.nixosModules.anbernic-rg35xx-h
           { hardware.anbernic.h700.enableRumble = true; }
         ];
+        anbernic-h700-sd-image-module =
+          (nixpkgs.lib.nixosSystem {
+            system = "aarch64-linux";
+            modules = [
+              "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
+              self.nixosModules.anbernic-rg35xx-h
+              self.nixosModules.anbernic-h700-sd-image
+              {
+                boot.loader.grub.enable = false;
+                system.stateVersion = "25.05";
+              }
+            ];
+          }).config.system.build.anbernixSdImage;
       };
 
     nixosConfigurations."anbernix" = nixpkgs.lib.nixosSystem {
