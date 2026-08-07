@@ -29,13 +29,26 @@
       in {
         inherit linux-h700;
         rocknix-joypad = linuxPackages-h700.callPackage ./pkgs/rocknix-joypad { };
+        u-boot-h700 = pkgs.callPackage ./pkgs/u-boot-h700 {
+          rocknix = inputs.rocknix;
+        };
+        u-boot-h700-lpddr3 = pkgs.callPackage ./pkgs/u-boot-h700 {
+          rocknix = inputs.rocknix;
+          ddrType = "lpddr3";
+        };
+        u-boot-h700-lpddr4 = pkgs.callPackage ./pkgs/u-boot-h700 {
+          rocknix = inputs.rocknix;
+          ddrType = "lpddr4";
+        };
       };
 
     nixosModules = {
       anbernic-h700 = import ./modules/anbernic/h700 { inherit inputs; };
+      anbernic-h700-sd-image = import ./modules/anbernic/h700-sd-image { inherit inputs; };
       anbernic-rg35xx-h = import ./modules/anbernic/rg35xx-h { inherit inputs; };
 
       h700 = self.nixosModules.anbernic-h700;
+      h700-sd-image = self.nixosModules.anbernic-h700-sd-image;
       rg35xx-h = self.nixosModules.anbernic-rg35xx-h;
       default = self.nixosModules.anbernic-h700;
     };
