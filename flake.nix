@@ -14,7 +14,16 @@
     };
   };
 
-  outputs = { home-manager, nixpkgs, ... }@inputs: {
+  outputs = { self, home-manager, nixpkgs, ... }@inputs: {
+    nixosModules = {
+      anbernic-h700 = ./modules/anbernic/h700;
+      anbernic-rg35xx-h = ./modules/anbernic/rg35xx-h;
+
+      h700 = self.nixosModules.anbernic-h700;
+      rg35xx-h = self.nixosModules.anbernic-rg35xx-h;
+      default = self.nixosModules.anbernic-h700;
+    };
+
     nixosConfigurations."anbernix" = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [

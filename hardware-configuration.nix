@@ -1,10 +1,4 @@
-{ pkgs, lib, ... }:
-let
-  anbernicPanelFirmware = pkgs.runCommand "anbernic-panel-firmware" {} ''
-    mkdir -p $out/lib/firmware/panels
-    cp ${./panels}/*.panel $out/lib/firmware/panels/
-  '';
-in {
+{ lib, ... }: {
   # Impermanent root: / is tmpfs (from modules/tmpfs-root.nix; sized down for
   # this 1 GB device), the primary SD's ext4 partition is mounted at /persist.
   # commit=60: batch ext4 journal flushes (default 5s) — fewer SD writes, longer
@@ -47,17 +41,8 @@ in {
         configurationLimit = 2;
       };
     };
-    kernelModules = [ "rocknix-singleadc-joypad" ]; # out of tree
     kernelParams = [ "console=tty0" ]; # show terminal early on boot
   };
 
-  hardware = {
-    deviceTree.name = "allwinner/sun50i-h700-anbernic-rg35xx-h.dtb";
-    enableRedistributableFirmware = true;
-    firmware = [ pkgs.linux-firmware anbernicPanelFirmware ];
-
-    uinput.enable = true; # gptokeyb (PortMaster) creates a virtual keyboard via /dev/uinput
-  };
-  nixpkgs.hostPlatform = "aarch64-linux";
   system.stateVersion = "25.05";
 }

@@ -68,7 +68,7 @@ let
   });
 
   customLinuxPackages = pkgs.linuxPackagesFor customKernel;
-  rocknixJoypad = customLinuxPackages.callPackage ./rocknix-joypad.nix { };
+  rocknixJoypad = customLinuxPackages.callPackage ../modules/rocknix-joypad.nix { };
 in {
   boot.kernelPackages = customLinuxPackages;
   boot.extraModulePackages = [ rocknixJoypad ];

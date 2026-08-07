@@ -52,8 +52,8 @@ in {
     ./hardware-configuration.nix
     ./common.nix
     ./modules/tmpfs-root.nix
+    ./modules/anbernic/rg35xx-h
 
-    ./kernel/kernel.nix
     ./home-manager/inputHandlers.nix
     ./home-manager/menus.nix
     ./home-manager/portmaster.nix
