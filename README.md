@@ -2,6 +2,16 @@
 
 A NixOS flake providing hardware support for Anbernic Linux handhelds
 
+## Repository Layout
+
+- `modules/`: reusable NixOS hardware modules for downstream configs.
+- `pkgs/`: package derivations used by the modules, including the H700 kernel
+  and ROCKNIX joypad driver.
+- `kernel/`: local kernel config, provenance notes, and local-only kernel
+  patches.
+- `profiles/`: optional system/user profiles for this repository's own image.
+- `hosts/`: complete host configurations maintained in this repository.
+
 ## NixOS Modules
 
 To use, import and apply the module for your device, like so:
@@ -47,3 +57,6 @@ the locked `rocknix` flake input. Most patches are read directly from
 `ROCKNIX/distribution/projects/ROCKNIX/devices/H700`, plus selected ROCKNIX
 mainline support patches used by the out-of-tree joypad driver. Local kernel
 deltas are documented in `kernel/README.md`.
+
+The flake includes eval-only checks for the exported H700, RG35XX-H, and
+RG35XX-H-with-rumble module paths.

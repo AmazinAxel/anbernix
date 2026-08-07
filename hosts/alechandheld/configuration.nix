@@ -51,12 +51,12 @@ in {
   imports = [
     ./hardware-configuration.nix
     ./common.nix
-    ./modules/tmpfs-root.nix
+    ../../modules/tmpfs-root.nix
     inputs.self.nixosModules.anbernic-rg35xx-h
 
-    ./home-manager/inputHandlers.nix
-    ./home-manager/menus.nix
-    ./home-manager/portmaster.nix
+    ../../profiles/gaming/inputHandlers.nix
+    ../../profiles/gaming/menus.nix
+    ../../profiles/gaming/portmaster.nix
   ];
 
   # Host state worth surviving the tmpfs root (game data lives on the game
@@ -73,7 +73,7 @@ in {
     libretro-core-info # has fake-08 core info too
   ];
 
-  home-manager.users.alec.imports = [ ./home-manager/hm.nix ];
+  home-manager.users.alec.imports = [ ../../profiles/gaming/hm.nix ];
   programs.gamemode.enable = true; # RetroArch requests priority boosts via gamemode D-Bus
   zramSwap.enable = false; # Breaks boot if enabled (also conflicts with hibernate below)
 

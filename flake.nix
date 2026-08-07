@@ -40,10 +40,39 @@
       default = self.nixosModules.anbernic-h700;
     };
 
+    checks.aarch64-linux =
+      let
+        minimalSystem = modules:
+          (nixpkgs.lib.nixosSystem {
+            system = "aarch64-linux";
+            modules = modules ++ [
+              {
+                boot.loader.grub.enable = false;
+                fileSystems."/" = {
+                  device = "none";
+                  fsType = "tmpfs";
+                };
+                system.stateVersion = "25.05";
+              }
+            ];
+          }).config.system.build.toplevel;
+      in {
+        anbernic-h700-module = minimalSystem [
+          self.nixosModules.anbernic-h700
+        ];
+        anbernic-rg35xx-h-module = minimalSystem [
+          self.nixosModules.anbernic-rg35xx-h
+        ];
+        anbernic-rg35xx-h-rumble-module = minimalSystem [
+          self.nixosModules.anbernic-rg35xx-h
+          { hardware.anbernic.h700.enableRumble = true; }
+        ];
+      };
+
     nixosConfigurations."anbernix" = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [
-        ./anbernix.nix
+        ./hosts/alechandheld/configuration.nix
         home-manager.nixosModules.home-manager
       ];
     };
