@@ -78,14 +78,14 @@ input_player1_up_btn = "13"
 input_player1_down_btn = "14"
 input_player1_left_btn = "15"
 input_player1_right_btn = "16"
-input_player1_l_x_plus_axis = "+0"
-input_player1_l_x_minus_axis = "-0"
-input_player1_l_y_plus_axis = "+1"
-input_player1_l_y_minus_axis = "-1"
-input_player1_r_x_plus_axis = "+3"
-input_player1_r_x_minus_axis = "-3"
-input_player1_r_y_plus_axis = "+4"
-input_player1_r_y_minus_axis = "-4"
+input_player1_r_x_plus_axis = "-1"
+input_player1_r_x_minus_axis = "+1"
+input_player1_r_y_plus_axis = "-0"
+input_player1_r_y_minus_axis = "+0"
+input_player1_l_x_plus_axis = "-4"
+input_player1_l_x_minus_axis = "+4"
+input_player1_l_y_plus_axis = "-3"
+input_player1_l_y_minus_axis = "+3"
 input_menu_toggle_btn = "10"
 input_enable_hotkey_btn = "10"
 audio_driver = "pulse"
@@ -98,7 +98,7 @@ config_save_on_exit = "false"
 EOF
 
     wrapProgram $out/bin/retroarch \
-      --add-flags "--appendconfig=$out/share/anbernix/retroarch-h700.cfg"
+      --add-flags "--config $out/share/anbernix/retroarch-h700.cfg"
   '';
 
   meta = {
