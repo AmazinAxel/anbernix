@@ -38,6 +38,13 @@ in {
       uinput.enable = lib.mkDefault true;
     };
 
+    services.udev.extraRules = ''
+      # The ROCKNIX H700 joypad driver reports the built-in controls as
+      # "H700 Gamepad". Make sure udev-backed applications enumerate it as a
+      # joystick even when hwdb does not tag it automatically.
+      SUBSYSTEM=="input", ATTRS{name}=="H700 Gamepad", ENV{ID_INPUT_JOYSTICK}="1"
+    '';
+
     nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
   };
 }
