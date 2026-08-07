@@ -116,10 +116,10 @@ You can opt in for testing:
 }
 ```
 
-The kernel patch set is based on ROCKNIX's H700 support from
-the locked `rocknix` flake input. Patches are read directly from ROCKNIX's H700,
-mainline, and kernel-version patch directories. Local kernel deltas are
-documented in `kernel/README.md`.
+The kernel is built from ROCKNIX's H700 support in the locked `rocknix` flake
+input — config, patches and panel firmware are all read directly from it, so a
+ROCKNIX kernel bump is usually just `nix flake update rocknix`. The small set of
+config options overlaid on top for NixOS is documented in `kernel/README.md`.
 
 The flake includes eval-only checks for the exported H700, RG35XX-H,
 RG35XX-H-with-rumble, and H700 SD image module paths.
