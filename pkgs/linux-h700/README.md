@@ -16,8 +16,8 @@ projects/ROCKNIX/packages/linux-firmware/kernel-firmware/extra-firmware
 
 ## Config
 
-`pkgs/linux-h700` takes ROCKNIX's config verbatim and applies `configOverlay`
-on top. That overlay is deliberately small:
+`default.nix` takes ROCKNIX's config verbatim and applies `configOverlay` on
+top. That overlay is deliberately small:
 
 - the two `@PLACEHOLDER@` values ROCKNIX's own build system substitutes
   (`INITRAMFS_SOURCE`, `DEFAULT_HOSTNAME`)

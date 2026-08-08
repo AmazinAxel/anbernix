@@ -18,8 +18,13 @@ let
 
   patchesFrom = dir: map (p: dir + "/${p}") (patchNames dir);
 
-  # ROCKNIX's PKG_PATCH_DIRS for H700, minus the dirs that don't exist upstream:
-  # the series dir, mainline, and the device dir below.
+  # ROCKNIX's PKG_PATCH_DIRS for H700 is "linux mainline H700 default 7.0". The
+  # "linux" and "default" dirs only exist under the top-level packages/linux,
+  # which the project-level projects/ROCKNIX/packages/linux shadows entirely, so
+  # what is left is the series dir, mainline, and the device dir below.
+  #
+  # Note ROCKNIX applies the series dir last; we apply it first. The three 7.0
+  # patches touch files no H700 patch does, so the orders are equivalent today.
   upstreamPatches =
     patchesFrom (rocknixKernelPatches + "/${series kernelVersion}")
     ++ patchesFrom rocknixMainline;

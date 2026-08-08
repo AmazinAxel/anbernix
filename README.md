@@ -7,7 +7,6 @@ A NixOS flake providing hardware support for Anbernic Linux handhelds
 - `modules/`: reusable NixOS hardware modules for downstream configs.
 - `pkgs/`: package derivations used by the modules, including the H700 kernel
   ROCKNIX joypad driver, U-Boot, and RetroArch wrapper.
-- `kernel/`: local kernel config and provenance notes.
 - `hosts/`: default image configurations exported by this flake.
 
 ## NixOS Modules
@@ -119,7 +118,8 @@ You can opt in for testing:
 The kernel is built from ROCKNIX's H700 support in the locked `rocknix` flake
 input — config, patches and panel firmware are all read directly from it, so a
 ROCKNIX kernel bump is usually just `nix flake update rocknix`. The small set of
-config options overlaid on top for NixOS is documented in `kernel/README.md`.
+config options overlaid on top for NixOS is documented in
+`pkgs/linux-h700/README.md`.
 
 The flake includes eval-only checks for the exported H700, RG35XX-H,
 RG35XX-H-with-rumble, and H700 SD image module paths.
