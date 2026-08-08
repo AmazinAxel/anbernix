@@ -18,21 +18,24 @@ let
 
   patchesFrom = dir: map (p: dir + "/${p}") (patchNames dir);
 
-  # ROCKNIX's PKG_PATCH_DIRS for H700 is "linux mainline H700 default 7.0". The
-  # "linux" and "default" dirs only exist under the top-level packages/linux,
-  # which the project-level projects/ROCKNIX/packages/linux shadows entirely, so
-  # what is left is the series dir, mainline, and the device dir below.
-  #
-  # Note ROCKNIX applies the series dir last; we apply it first. The three 7.0
-  # patches touch files no H700 patch does, so the orders are equivalent today.
-  upstreamPatches =
-    patchesFrom (rocknixKernelPatches + "/${series kernelVersion}")
-    ++ patchesFrom rocknixMainline;
+  # ROCKNIX's PKG_PATCH_DIRS for H700 is "linux mainline H700 default 7.0", and
+  # its build system applies the dirs in that order, each dir's patches sorted
+  # by filename. The "linux" and "default" dirs only exist under the top-level
+  # packages/linux, which the project-level projects/ROCKNIX/packages/linux
+  # shadows entirely, so what is left is mainline, the device dir, then the
+  # series dir last. Keep that order: it is what ROCKNIX actually validates.
+  mainlinePatches = patchesFrom rocknixMainline;
+  seriesPatches = patchesFrom (rocknixKernelPatches + "/${series kernelVersion}");
 
   h700PatchDir = rocknixH700 + "/patches/linux";
+  # ROCKNIX enables a disabled patch by renaming it, so it applies in its
+  # numbered position rather than last. Sort by basename to match.
   devicePatches =
-    patchesFrom h700PatchDir
-    ++ lib.optional enableRumble (h700PatchDir + "/0150-add-forcefeedback.patch.disabled");
+    lib.sortOn builtins.baseNameOf
+      (patchesFrom h700PatchDir
+        ++ lib.optional enableRumble (h700PatchDir + "/0150-add-forcefeedback.patch.disabled"));
+
+  orderedPatches = mainlinePatches ++ devicePatches ++ seriesPatches;
 
   armMissingOptions = [ "DMIID" ];
 
@@ -158,7 +161,7 @@ let
     kernelPatches = map (p: {
       name = builtins.baseNameOf p;
       patch = p;
-    }) (upstreamPatches ++ devicePatches);
+    }) orderedPatches;
     allowImportFromDerivation = true;
   };
 
