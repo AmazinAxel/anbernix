@@ -6,7 +6,9 @@ let
     rocknix = inputs.rocknix;
   };
   h700LinuxPackages = pkgs.linuxPackagesFor h700Kernel;
-  rocknixJoypad = h700LinuxPackages.callPackage ../../../pkgs/rocknix-joypad { };
+  rocknixJoypad = h700LinuxPackages.callPackage ../../../pkgs/rocknix-joypad {
+    inherit (inputs) rocknix-joypad;
+  };
 in {
   boot.kernelPackages = h700LinuxPackages;
   boot.extraModulePackages = [ rocknixJoypad ];

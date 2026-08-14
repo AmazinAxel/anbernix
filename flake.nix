@@ -5,6 +5,10 @@
       url = "github:ROCKNIX/distribution/next";
       flake = false;
     };
+    rocknix-joypad = {
+      url = "github:ROCKNIX/rocknix-joypad";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, ... }@inputs: {
@@ -17,7 +21,9 @@
         linuxPackages-h700 = pkgs.linuxPackagesFor linux-h700;
       in {
         inherit linux-h700;
-        rocknix-joypad = linuxPackages-h700.callPackage ./pkgs/rocknix-joypad { };
+        rocknix-joypad = linuxPackages-h700.callPackage ./pkgs/rocknix-joypad {
+          inherit (inputs) rocknix-joypad;
+        };
         u-boot-h700 = pkgs.callPackage ./pkgs/u-boot-h700 {
           rocknix = inputs.rocknix;
         };

@@ -33,10 +33,27 @@
         "type": "github"
       }
     },
+    "rocknix-joypad": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786650830,
+        "narHash": "sha256-CPuvujQhfnrfYO6GnlrwbEeTpzTciKaoDfoOn3V+BrE=",
+        "owner": "ROCKNIX",
+        "repo": "rocknix-joypad",
+        "rev": "1dd1115c8d231ba934253efb91ffb0c6ad8e993d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ROCKNIX",
+        "repo": "rocknix-joypad",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
-        "rocknix": "rocknix"
+        "rocknix": "rocknix",
+        "rocknix-joypad": "rocknix-joypad"
       }
     }
   },
