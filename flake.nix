@@ -55,12 +55,13 @@
             modules = modules ++ [
               {
                 boot.loader.grub.enable = false;
+                boot.supportedFilesystems.zfs = nixpkgs.lib.mkForce false;
                 boot.zfs.forceImportRoot = false;
                 fileSystems."/" = {
                   device = "none";
                   fsType = "tmpfs";
                 };
-                system.stateVersion = "25.05";
+                system.stateVersion = "26.11";
               }
             ];
           }).config.system.build.toplevel;
@@ -71,10 +72,6 @@
         anbernic-rg35xx-h-module = minimalSystem [
           self.nixosModules.anbernic-rg35xx-h
         ];
-        anbernic-rg35xx-h-rumble-module = minimalSystem [
-          self.nixosModules.anbernic-rg35xx-h
-          { hardware.anbernic.h700.enableRumble = true; }
-        ];
         anbernic-h700-sd-image-module =
           (nixpkgs.lib.nixosSystem {
             system = "aarch64-linux";
@@ -84,8 +81,9 @@
               self.nixosModules.anbernic-h700-sd-image
               {
                 boot.loader.grub.enable = false;
+                boot.supportedFilesystems.zfs = nixpkgs.lib.mkForce false;
                 boot.zfs.forceImportRoot = false;
-                system.stateVersion = "25.05";
+                system.stateVersion = "26.11";
               }
             ];
           }).config.system.build.anbernixSdImage;

@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation {
   pname = "rocknix-joypad";
-  version = "unstable-2026-08-01";
+  version = "unstable-2026-08-14";
 
   src = fetchFromGitHub {
     owner = "ROCKNIX";
     repo = "rocknix-joypad";
-    rev = "a6b24835aa1e6339360d08baacd401bb09d08049";
-    hash = "sha256-ZZ63fN2rAbSbQp11ealvUd74rsdUHD5mcIDYmje1vwg=";
+    rev = "1dd1115c8d231ba934253efb91ffb0c6ad8e993d";
+    hash = "sha256-CPuvujQhfnrfYO6GnlrwbEeTpzTciKaoDfoOn3V+BrE=";
   };
 
   nativeBuildInputs = kernel.moduleBuildDependencies;

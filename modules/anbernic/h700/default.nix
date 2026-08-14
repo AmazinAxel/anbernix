@@ -1,8 +1,7 @@
 { inputs }:
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, ... }:
 
 let
-  cfg = config.hardware.anbernic.h700;
   rocknixFirmware = inputs.rocknix + "/projects/ROCKNIX/packages/linux-firmware/kernel-firmware/extra-firmware";
   anbernicPanelFirmware = pkgs.runCommand "anbernic-panel-firmware" {} ''
     mkdir -p $out/lib/firmware/panels
@@ -13,15 +12,8 @@ in {
   imports = [
     (import ./kernel.nix {
       inherit inputs;
-      enableRumble = cfg.enableRumble;
     })
   ];
-
-  options.hardware.anbernic.h700 = {
-    enableRumble = lib.mkEnableOption ''
-      experimental rumble support using ROCKNIX's disabled force-feedback patch
-    '';
-  };
 
   config = {
     boot = {

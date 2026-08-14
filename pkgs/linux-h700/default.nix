@@ -1,7 +1,6 @@
 { pkgs
 , lib
 , rocknix
-, enableRumble ? false
 , ...
 }:
 
@@ -18,22 +17,22 @@ let
 
   patchesFrom = dir: map (p: dir + "/${p}") (patchNames dir);
 
-  # ROCKNIX's PKG_PATCH_DIRS for H700 is "linux mainline H700 default 7.0", and
-  # its build system applies the dirs in that order, each dir's patches sorted
-  # by filename. The "linux" and "default" dirs only exist under the top-level
+  # ROCKNIX starts H700 with PKG_PATCH_DIRS="linux mainline H700 default 7.0".
+  # Its build system applies dirs in that order, each dir's patches sorted by
+  # filename. The "linux" and "default" dirs only exist under the top-level
   # packages/linux, which the project-level projects/ROCKNIX/packages/linux
   # shadows entirely, so what is left is mainline, the device dir, then the
-  # series dir last. Keep that order: it is what ROCKNIX actually validates.
+  # hardcoded 7.0 dir. Keep that order: it is what ROCKNIX actually validates.
   mainlinePatches = patchesFrom rocknixMainline;
-  seriesPatches = patchesFrom (rocknixKernelPatches + "/${series kernelVersion}");
+  # H700 uses Linux 7.1.2 today, but ROCKNIX still appends the 7.0 patch dir in
+  # projects/ROCKNIX/packages/linux/package.mk.
+  seriesPatches = patchesFrom (rocknixKernelPatches + "/7.0");
 
   h700PatchDir = rocknixH700 + "/patches/linux";
-  # ROCKNIX enables a disabled patch by renaming it, so it applies in its
-  # numbered position rather than last. Sort by basename to match.
+  # Sort by basename to match ROCKNIX's patch application order.
   devicePatches =
     lib.sortOn builtins.baseNameOf
-      (patchesFrom h700PatchDir
-        ++ lib.optional enableRumble (h700PatchDir + "/0150-add-forcefeedback.patch.disabled"));
+      (patchesFrom h700PatchDir);
 
   orderedPatches = mainlinePatches ++ devicePatches ++ seriesPatches;
 
@@ -52,10 +51,10 @@ let
   };
 
   # ROCKNIX's own linux package builds Linux ${rocknixLinuxVersion} for H700,
-  # parsed out of the `case ${DEVICE}` block in its package.mk. We only use it
-  # to catch the config drifting away from the source we pin below.
+  # parsed out of the `case ${DEVICE}` block in its package.mk. We use it to
+  # catch the source pin drifting away from the ROCKNIX input.
   packageMkLines = lib.splitString "\n" (builtins.readFile (rocknixLinuxPkg + "/package.mk"));
-  h700Case = lib.findFirst (x: builtins.match " *H700\\)" x.line != null) null
+  h700Case = lib.findFirst (x: builtins.match " *.*H700.*\\)" x.line != null) null
     (lib.imap0 (index: line: { inherit index line; }) packageMkLines);
   rocknixLinuxVersion =
     let
@@ -67,13 +66,9 @@ let
     else if match == null then null
     else lib.head match;
 
-  # Pinned directly from kernel.org: nixpkgs dropped linux_7_0 at its upstream
-  # EOL, but the ROCKNIX patch set + config are validated against 7.0.y.
-  # 7.0.14 is the final 7.0.y release, so we run slightly ahead of ROCKNIX's
-  # own pin. Patch-level skew inside one stable series is fine (`make oldconfig`
-  # reconciles it); a series bump is not, and trips the check below.
-  kernelVersion = "7.0.14";
-  kernelHash = "sha256-3pmZt4TSKT8A05xi2PkqCKuKVLxOgP/SUKDAnLB6D5g=";
+  # Pinned directly from kernel.org to match ROCKNIX's H700 PKG_VERSION.
+  kernelVersion = "7.1.2";
+  kernelHash = "sha256-NxmMk3J74kfJ+1MJu4bNXklsYeUyLNjE7KlHa7C1iD8=";
 
   series = v: lib.concatStringsSep "." (lib.take 2 (lib.splitString "." v));
 
@@ -149,6 +144,18 @@ let
     (lib.splitString "\n" configText);
 
   configFile = builtins.toFile "linux-h700.config" configText;
+  parsedConfig =
+    let
+      matchLine = line:
+        let
+          match = builtins.match "(CONFIG_[^=]+)=([ym])" line;
+        in
+        lib.optional (match != null) {
+          name = lib.elemAt match 0;
+          value = lib.elemAt match 1;
+        };
+    in
+    lib.listToAttrs (lib.concatMap matchLine (lib.splitString "\n" configText));
 
   baseKernel = pkgs.linuxManualConfig {
     version = kernelVersion;
@@ -158,6 +165,7 @@ let
       hash = kernelHash;
     };
     configfile = configFile;
+    config = parsedConfig;
     kernelPatches = map (p: {
       name = builtins.baseNameOf p;
       patch = p;
@@ -212,10 +220,10 @@ lib.throwIf (rocknixLinuxVersion == null)
   (lib.throwIf (rocknixConfigFile == null)
     ("no ROCKNIX H700 kernel config found; looked for:\n"
       + lib.concatMapStringsSep "\n" (c: "  ${toString c}") configCandidates)
-    (lib.throwIf (series rocknixLinuxVersion != series kernelVersion)
+    (lib.throwIf (rocknixLinuxVersion != kernelVersion)
       ("ROCKNIX now builds Linux ${rocknixLinuxVersion} for H700, but pkgs/linux-h700 "
-        + "pins ${kernelVersion}. Bump kernelVersion and kernelHash to a ${series rocknixLinuxVersion}.y "
-        + "release and re-check the patch set in ${toString rocknixKernelPatches}.")
+        + "pins ${kernelVersion}. Bump kernelVersion and kernelHash, then re-check "
+        + "the patch set in ${toString rocknixKernelPatches}.")
       (lib.throwIf (leftoverPlaceholders != [ ])
         ("ROCKNIX's kernel config has build-system placeholders that configOverlay "
           + "does not substitute:\n"

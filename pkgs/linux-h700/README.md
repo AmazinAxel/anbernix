@@ -33,8 +33,7 @@ in `passthru.config` instead (`armMissingOptions`).
 Three things fail the build rather than degrading silently:
 
 - a config placeholder the overlay does not substitute
-- a ROCKNIX kernel *series* bump (e.g. 7.0.y → 7.1.y), which needs a new source
-  tarball hash and a fresh look at the patch set. Patch-level skew within a
-  series is fine; `make oldconfig` reconciles it.
+- a ROCKNIX H700 kernel version bump, which needs a new source tarball hash and
+  a fresh look at the patch set
 - an overlay option that does not survive `make oldconfig`, which would
   otherwise leave NixOS asserting against options the kernel does not have

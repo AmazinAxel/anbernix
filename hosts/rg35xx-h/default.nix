@@ -10,7 +10,7 @@ nixpkgs.lib.nixosSystem {
 
     ({ lib, ... }: {
       networking.hostName = "anbernix-rg35xx-h";
-      system.stateVersion = "25.05";
+      system.stateVersion = "26.11";
 
       hardware.anbernic.h700.retroarch = {
         enable = true;
@@ -30,6 +30,7 @@ nixpkgs.lib.nixosSystem {
           };
         };
 
+        supportedFilesystems.zfs = lib.mkForce false;
         zfs.forceImportRoot = false;
       };
 

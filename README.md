@@ -101,25 +101,11 @@ nix build github:AmazinAxel/anbernix#rg35xx-h-sd-image
 nix build github:AmazinAxel/anbernix#nixosConfigurations.rg35xx-h.config.system.build.anbernixSdImage
 ```
 
-### Rumble Support
-
-Rumble is disabled by default. ROCKNIX currently ships its H700 force-feedback
-patch as `0150-add-forcefeedback.patch.disabled` because the current H700 PWM
-driver is not considered reliable enough upstream.
-
-You can opt in for testing:
-
-```nix
-{
-  hardware.anbernic.h700.enableRumble = true;
-}
-```
-
 The kernel is built from ROCKNIX's H700 support in the locked `rocknix` flake
 input — config, patches and panel firmware are all read directly from it, so a
 ROCKNIX kernel bump is usually just `nix flake update rocknix`. The small set of
 config options overlaid on top for NixOS is documented in
 `pkgs/linux-h700/README.md`.
 
-The flake includes eval-only checks for the exported H700, RG35XX-H,
-RG35XX-H-with-rumble, and H700 SD image module paths.
+The flake includes eval-only checks for the exported H700, RG35XX-H, H700 SD
+image, and H700 RetroArch module paths.
