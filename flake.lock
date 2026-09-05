@@ -19,11 +19,11 @@
     "rocknix": {
       "flake": false,
       "locked": {
-        "lastModified": 1786694441,
-        "narHash": "sha256-UPw7fLXxikq5g0hEAu9pbUc7CnCBEM3l3j0ByVXMuDI=",
+        "lastModified": 1788558631,
+        "narHash": "sha256-hYPKTi14hjL/xIkdXuYBH/4FP4cBBmf9z30Z1PFixiw=",
         "owner": "ROCKNIX",
         "repo": "distribution",
-        "rev": "154e275e357d3dc731d3b05494f1216a7a4a95c2",
+        "rev": "1178bc2238de782bf081c558c177d35bb3690021",
         "type": "github"
       },
       "original": {

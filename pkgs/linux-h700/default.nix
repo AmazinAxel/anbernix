@@ -17,16 +17,17 @@ let
 
   patchesFrom = dir: map (p: dir + "/${p}") (patchNames dir);
 
-  # ROCKNIX starts H700 with PKG_PATCH_DIRS="linux mainline H700 default 7.0".
+  # ROCKNIX starts H700 with PKG_PATCH_DIRS="linux mainline H700 default".
   # Its build system applies dirs in that order, each dir's patches sorted by
   # filename. The "linux" and "default" dirs only exist under the top-level
   # packages/linux, which the project-level projects/ROCKNIX/packages/linux
   # shadows entirely, so what is left is mainline, the device dir, then the
-  # hardcoded 7.0 dir. Keep that order: it is what ROCKNIX actually validates.
+  # kernel-version patch dir that ROCKNIX's linux package automatically adds.
+  # Keep that order: it is what ROCKNIX actually validates.
   mainlinePatches = patchesFrom rocknixMainline;
-  # H700 uses Linux 7.1.2 today, but ROCKNIX still appends the 7.0 patch dir in
-  # projects/ROCKNIX/packages/linux/package.mk.
-  seriesPatches = patchesFrom (rocknixKernelPatches + "/7.0");
+  # Hardcoded from ROCKNIX projects/ROCKNIX/packages/linux/package.mk: Linux
+  # 7.2 automatically adds the matching patches/7.2 dir.
+  seriesPatches = patchesFrom (rocknixKernelPatches + "/7.2");
 
   h700PatchDir = rocknixH700 + "/patches/linux";
   # Sort by basename to match ROCKNIX's patch application order.
@@ -67,8 +68,8 @@ let
     else lib.head match;
 
   # Pinned directly from kernel.org to match ROCKNIX's H700 PKG_VERSION.
-  kernelVersion = "7.1.2";
-  kernelHash = "sha256-NxmMk3J74kfJ+1MJu4bNXklsYeUyLNjE7KlHa7C1iD8=";
+  kernelVersion = "7.2";
+  kernelHash = "sha256-+f7z0UwN9TgZAm9L50RZg1wqCw3L9bW72eoZ8IKUArM=";
 
   series = v: lib.concatStringsSep "." (lib.take 2 (lib.splitString "." v));
 

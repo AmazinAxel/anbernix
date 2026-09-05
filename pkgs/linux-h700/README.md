@@ -7,7 +7,7 @@ locked `rocknix` flake input — nothing is vendored here:
 ROCKNIX/distribution
 projects/ROCKNIX/devices/H700/linux/linux.aarch64.conf
 projects/ROCKNIX/devices/H700/patches/linux
-projects/ROCKNIX/packages/linux/patches/7.0
+projects/ROCKNIX/packages/linux/patches/7.2
 projects/ROCKNIX/packages/linux/patches/mainline
 projects/ROCKNIX/packages/linux-firmware/kernel-firmware/extra-firmware
 ```
