@@ -2,7 +2,7 @@
 
 stdenv.mkDerivation {
   pname = "rocknix-joypad";
-  version = "unstable-2026-08-14";
+  version = "unstable-2026-08-30";
 
   src = rocknix-joypad;
 

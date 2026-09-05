@@ -2,11 +2,11 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1786599213,
-        "narHash": "sha256-yNJd40f11EzXBjSByCB7IPpeFFAdeoSKKM67dGkfFoU=",
+        "lastModified": 1788404924,
+        "narHash": "sha256-lhEhY8X5EgkQ/eg6IFz4cc8jRuSYSvnxx1al7d1dvZ0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "0e251e24a4f24e036a084b6b4b2d2491af4167f4",
+        "rev": "0968519e14f7aa7d3e9b389682bd74d2b51c8ce8",
         "type": "github"
       },
       "original": {
@@ -36,11 +36,11 @@
     "rocknix-joypad": {
       "flake": false,
       "locked": {
-        "lastModified": 1786650830,
-        "narHash": "sha256-CPuvujQhfnrfYO6GnlrwbEeTpzTciKaoDfoOn3V+BrE=",
+        "lastModified": 1788067814,
+        "narHash": "sha256-zcNDZtCI/X6NWFRjQkyVJvak20VjIr9x6+qsQiRtg6c=",
         "owner": "ROCKNIX",
         "repo": "rocknix-joypad",
-        "rev": "1dd1115c8d231ba934253efb91ffb0c6ad8e993d",
+        "rev": "3bc3ef6445bcdcdd7ca0d4e4dbe964f6d903b3e6",
         "type": "github"
       },
       "original": {
