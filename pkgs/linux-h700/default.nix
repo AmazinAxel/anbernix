@@ -163,7 +163,7 @@ let
 
   baseKernel = pkgs.linuxManualConfig {
     version = kernelVersion;
-    modDirVersion = kernelVersion;
+    modDirVersion = lib.versions.pad 3 kernelVersion;
     src = pkgs.fetchurl {
       url = "mirror://kernel/linux/kernel/v7.x/linux-${kernelVersion}.tar.xz";
       hash = kernelHash;
