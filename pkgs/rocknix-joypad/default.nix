@@ -16,8 +16,8 @@ stdenv.mkDerivation {
 
   installPhase = ''
     runHook preInstall
-    mkdir -p $out/lib/modules/${kernel.modDirVersion}/misc
-    cp *.ko $out/lib/modules/${kernel.modDirVersion}/misc/
+    make DEVICE=H700 -C ${kernel.dev}/lib/modules/${kernel.modDirVersion}/build M=$PWD \
+      INSTALL_MOD_PATH=$out INSTALL_MOD_DIR=misc DEPMOD=true modules_install
     runHook postInstall
   '';
 
