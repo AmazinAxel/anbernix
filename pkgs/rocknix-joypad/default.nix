@@ -1,4 +1,4 @@
-{ lib, stdenv, kernel, rocknix-joypad }:
+{ lib, stdenv, kernel, kernelModuleMakeFlags, rocknix-joypad }:
 
 stdenv.mkDerivation {
   pname = "rocknix-joypad";
@@ -8,18 +8,18 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = kernel.moduleBuildDependencies;
 
-  buildPhase = ''
-    runHook preBuild
-    make DEVICE=H700 -C ${kernel.dev}/lib/modules/${kernel.modDirVersion}/build M=$PWD modules
-    runHook postBuild
-  '';
+  makeFlags = kernelModuleMakeFlags ++ [
+    "DEVICE=H700"
+    "-C"
+    "${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"
+    "M=$(PWD)"
+    "INSTALL_MOD_PATH=${placeholder "out"}"
+    "INSTALL_MOD_DIR=misc"
+    "DEPMOD=true"
+  ];
 
-  installPhase = ''
-    runHook preInstall
-    make DEVICE=H700 -C ${kernel.dev}/lib/modules/${kernel.modDirVersion}/build M=$PWD \
-      INSTALL_MOD_PATH=$out INSTALL_MOD_DIR=misc DEPMOD=true modules_install
-    runHook postInstall
-  '';
+  buildFlags = [ "modules" ];
+  installTargets = [ "modules_install" ];
 
   meta = {
     description = "ROCKNIX joypad driver";
