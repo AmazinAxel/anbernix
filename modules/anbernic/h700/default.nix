@@ -25,8 +25,9 @@ in {
     };
 
     hardware = {
-      enableRedistributableFirmware = lib.mkDefault true;
-      firmware = [ pkgs.linux-firmware anbernicPanelFirmware ];
+      # Wifi and bluetooth firmware is built into the kernel so we dont need linux-firmware pkg at runtime
+      firmware = [ anbernicPanelFirmware ];
+      wirelessRegulatoryDatabase = lib.mkDefault true;
       uinput.enable = lib.mkDefault true;
     };
 
